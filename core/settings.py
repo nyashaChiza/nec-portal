@@ -1,5 +1,5 @@
 
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -10,7 +10,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-xeh$qy354%(0%5dm0f^6sd#8*x#^dz+vwc4!%jnfd@!qsd(4lw'
+SECRET_KEY = 'xeh$qy354%(0%5dm0f^6sd#8*x#^dz+vwc4!%jnfd@!qsd(4lw'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -31,6 +31,8 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    'accounts',
+    'dashboard',
 ]
 
 MIDDLEWARE = [
@@ -72,10 +74,9 @@ AUTHENTICATION_BACKENDS = [
 SITE_ID = 1
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_USERNAME_REQUIRED = True
-ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
 ACCOUNT_EMAIL_VERIFICATION = 'optional'
+
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend" if DEBUG == True else "django.core.mail.backends.smtp.EmailBackend"
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
@@ -115,12 +116,19 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = "/static/"
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+STATICFILES_DIRS = [BASE_DIR / "static"]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+AUTH_USER_MODEL = 'accounts.CustomUser'  # example path
+
+
+LOGOUT_REDIRECT_URL = 'account_login'
+LOGIN_REDIRECT_URL = 'dashboard'
+LOGIN_URL = '/auth/login/'

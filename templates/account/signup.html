@@ -1,10 +1,171 @@
-{% extends "layouts/base.html" %}
-{% block title %}Sign Up{% endblock %}
-{% block content %}
-<h2>Sign Up</h2>
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Create Account</button>
-</form>
-{% endblock %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="zxx" class="js">
+
+<head>
+    <base href="#" />
+    <meta charset="utf-8" />
+    <meta name="author" content="Nyasha Chizampeni" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="A utility management system." />
+    <!-- Fav Icon  -->
+    <link rel="shortcut icon" href='{% static "images/favicon.png" %}' />
+    <!-- Page Title  -->
+    <title>NEC</title>
+    <!-- StyleSheets  -->
+    <link rel="stylesheet" href='{% static "assets/css/dashlite.css"%}?ver=3.2.2' />
+    <link id="skin-default" rel="stylesheet" href='{% static "assets/css/theme.css"%}?ver=3.2.2' />
+</head>
+
+<body class="nk-body ui-rounder npc-general pg-auth">
+    <div class="nk-app-root">
+        <!-- main @s -->
+        <div class="nk-main ">
+            <!-- wrap @s -->
+            <div class="nk-wrap nk-wrap-nosidebar">
+                <!-- content @s -->
+                <div class="nk-content ">
+                    <div class="nk-split nk-split-page nk-split-lg">
+                        <div class="nk-split-content nk-block-area nk-block-area-column nk-auth-container bg-white">
+                            <div class="absolute-top-right d-lg-none p-3 p-sm-5">
+                                <a href="#" class="toggle btn-white btn btn-icon btn-light" data-target="athPromo"><em
+                                        class="icon ni ni-info"></em></a>
+                            </div>
+                            <div class="nk-block nk-block-middle nk-auth-body">
+
+
+                                <div class="nk-block-head">
+                                    <div class="nk-block-head-content">
+                                        <h5 class="nk-block-title">Sign-Up</h5>
+
+                                    </div>
+                                </div><!-- .nk-block-head -->
+                                <form method="post" class="form-validate is-alter">
+                                    {% if form.errors %}
+                                    <div class="alert alert-pro alert-danger">
+                                        <ul>
+                                            {% for field, errors in form.errors.items %}
+                                            <li><strong>{{ field|capfirst }}</strong>:
+                                                {% for error in errors %}
+                                                <span>{{ error }}</span>
+                                                {% endfor %}
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                    {% endif %}
+
+                                    <form method="post" class="form-validate is-alter">
+                                        {% csrf_token %}
+
+                                        <div class="form-group">
+                                            <label class="form-label" for="username">Username</label>
+                                            <div class="form-control-wrap">
+                                                <input type="text" name="username" class="form-control form-control-lg"
+                                                    id="username" placeholder="Enter your username" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="form-label" for="username">First Name</label>
+                                            <div class="form-control-wrap">
+                                                <input type="text" name="first_name" class="form-control form-control-lg"
+                                                    id="first_name" placeholder="Enter your name" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="form-label" for="username">last Name</label>
+                                            <div class="form-control-wrap">
+                                                <input type="text" name="last_name" class="form-control form-control-lg"
+                                                    id="last_name" placeholder="Enter your last name" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="form-label" for="email">Email</label>
+                                            <div class="form-control-wrap">
+                                                <input type="email" name="email" class="form-control form-control-lg"
+                                                    id="email" placeholder="Enter your email" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="form-label" for="password">Password</label>
+                                            <div class="form-control-wrap">
+                                                <input type="password" name="password1"
+                                                    class="form-control form-control-lg" id="password"
+                                                    placeholder="Enter password" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="form-label" for="confirm_password">Confirm Password</label>
+                                            <div class="form-control-wrap">
+                                                <input type="password" name="password2"
+                                                    class="form-control form-control-lg" id="confirm_password"
+                                                    placeholder="Confirm password" required>
+                                            </div>
+                                        </div>
+                          
+                                    <button class="btn btn-lg btn-primary btn-block my-4" type="submit">Sign Up</button>
+                                    <a href="{% url 'account_login' %}" class="btn btn-lg btn-secondary btn-block">Back</a>
+                                </form>
+                                
+
+                            </div><!-- .nk-block -->
+                            <!-- .nk-block -->
+                        </div><!-- .nk-split-content -->
+                        <div class="nk-split-content nk-split-stretch bg-lighter d-flex toggle-break-lg toggle-slide toggle-slide-right"
+                            data-toggle-body="true" data-content="athPromo" data-toggle-screen="lg"
+                            data-toggle-overlay="true">
+                            <div class="slider-wrap w-100 w-max-550px p-3 p-sm-5 m-auto">
+                                <div class="slider-init" data-slick='{"dots":true, "arrows":false}'>
+                                    <div class="slider-item">
+                                        <div class="nk-feature nk-feature-center">
+                                            <div class="nk-feature-img">
+                                                <img class="round" src="{% static 'images/slides/promo-a.png' %}"
+                                                    srcset="{% static 'images/slides/promo-a2x.png 2x' %}" alt="">
+                                            </div>
+
+                                        </div>
+                                    </div><!-- .slider-item -->
+                                    <div class="slider-item">
+                                        <div class="nk-feature nk-feature-center">
+                                            <div class="nk-feature-img">
+                                                <img class="round" src="{%  static 'images/slides/promo-b.png' %}"
+                                                    srcset="{% static 'images/slides/promo-b2x.png 2x' %}" alt="">
+                                            </div>
+
+                                        </div>
+                                    </div><!-- .slider-item -->
+                                    <div class="slider-item">
+                                        <div class="nk-feature nk-feature-center">
+                                            <div class="nk-feature-img">
+                                                <img class="round" src="{% static 'images/slides/promo-c.png' %}"
+                                                    srcset="{% static 'images/slides/promo-c2x.png 2x' %}" alt="">
+                                            </div>
+
+                                        </div>
+                                    </div><!-- .slider-item -->
+                                </div><!-- .slider-init -->
+                                <div class="slider-dots"></div>
+                                <div class="slider-arrows"></div>
+                            </div><!-- .slider-wrap -->
+                        </div><!-- .nk-split-content -->
+                    </div><!-- .nk-split -->
+                </div>
+                <!-- wrap @e -->
+            </div>
+            <!-- content @e -->
+        </div>
+        <!-- main @e -->
+    </div>
+    <!-- app-root @e -->
+    <!-- JavaScript -->
+    <script src="{% static 'assets/js/bundle.js?ver=3.2.2' %}"></script>
+    <script src="{% static 'assets/js/scripts.js?ver=3.2.2' %}"></script>
+    <!-- select region modal -->
+    <!-- .modal -->
+
+</html>
