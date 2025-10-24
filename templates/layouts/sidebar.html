@@ -3,7 +3,7 @@
 <div class="nk-sidebar nk-sidebar-fixed is-light" data-content="sidebarMenu">
   <div class="nk-sidebar-element nk-sidebar-head">
       <div class="nk-sidebar-brand">
-        <a href="" class="logo-link nk-sidebar-logo">
+    <a href="{% url 'farm:farm_list' %}" class="logo-link nk-sidebar-logo">
             <span class="nk-menu-text h4 nk-title">{{ request.user.company }}</span>
             <span class="sub-text">{{ request.user.operation_site }}{{ request.user.managed_site }}</span>
         </a>
@@ -18,25 +18,25 @@
           <div class="nk-sidebar-menu" data-simplebar>
               <ul class="nk-menu">
                   <li class="nk-menu-item">
-                      <a href="" class="nk-menu-link">
+                      <a href="{% url 'dashboard' %}" class="nk-menu-link">
                           <span class="nk-menu-icon"><em class="icon ni ni-dashboard-fill"></em></span>
                           <span class="nk-menu-text">Dashboard</span>
                       </a>
                   </li><!-- .nk-menu-item -->
                   <li class="nk-menu-item">
-                      <a href="" class="nk-menu-link">
+                      <a href="{% url 'farm:farm_list' %}" class="nk-menu-link">
                           <span class="nk-menu-icon"><em class="icon ni ni-bag-fill"></em></span>
                           <span class="nk-menu-text">Farms</span>
                       </a>
                   </li><!-- .nk-menu-item -->
                   <li class="nk-menu-item">
-                      <a href="" class="nk-menu-link">
+                      <a href="{% url 'farm:farmemployeestats_list' %}" class="nk-menu-link">
                           <span class="nk-menu-icon"><em class="icon ni ni-truck"></em></span>
                           <span class="nk-menu-text">Employees</span>
                       </a>
                   </li><!-- .nk-menu-item -->
                   <li class="nk-menu-item">
-                    <a href="" class="nk-menu-link">
+                    <a href="{% url 'farm:sitevisit_list' %}" class="nk-menu-link">
                         <span class="nk-menu-icon"><em class="icon ni ni-truck"></em></span>
                         <span class="nk-menu-text">Site Visits</span>
                     </a>
@@ -47,7 +47,7 @@
                   <!-- .nk-menu-item -->
                  <!-- .nk-menu-item -->
                  <li class="nk-menu-item">
-                  <a href="" class="nk-menu-link">
+                  <a href="{% url 'farm:statement_list' %}" class="nk-menu-link">
                       <span class="nk-menu-icon"><em class="icon ni ni-location"></em></span>
                       <span class="nk-menu-text">Statements</span>
                   </a>

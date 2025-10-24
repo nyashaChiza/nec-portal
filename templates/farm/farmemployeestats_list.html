@@ -1,0 +1,23 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block body %}
+<div class="container my-5">
+  <h3>Farm Employee Stats</h3>
+  <a class="btn btn-primary mb-3" href="{% url 'farm:farmemployeestats_create' %}">Add Employee Stats</a>
+  <ul class="list-group">
+    {% for fes in farm_employee_stats %}
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <a href="{% url 'farmemployeestats_detail' fes.pk %}">{{ fes }}</a>
+        <span>
+          <a class="btn btn-sm btn-outline-secondary" href="{% url 'farmemployeestats_update' fes.pk %}">Edit</a>
+          <a class="btn btn-sm btn-danger" href="{% url 'farmemployeestats_delete' fes.pk %}">Delete</a>
+        </span>
+      </li>
+    {% empty %}
+      <li class="list-group-item">No employee stats.</li>
+    {% endfor %}
+  </ul>
+  {% if is_paginated %}{% include 'layouts/pagination.html' %}{% endif %}
+</div>
+{% endblock %}

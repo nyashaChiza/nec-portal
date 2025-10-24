@@ -1,0 +1,29 @@
+{% extends "layouts/base.html" %}
+{% block title %}Create Farm{% endblock %}
+
+{% block body %}
+
+
+<div class="container my-4">
+    <div class="card shadow-sm">
+        <div class="card-header">
+            <h5 class="mb-0">Create Farm</h5>
+        </div>
+        <div class="card-body">
+          
+            <form method="post" >
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div class="col-12">
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-lg btn-primary" value="save">Save</button>
+                                <a href="{% url 'farm:farm_list' %}" class="btn btn-outline-secondary btn-lg">Cancel</a>
+                            </div>
+                        </div>
+                
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

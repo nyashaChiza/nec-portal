@@ -4,8 +4,9 @@ from django.views.generic import RedirectView
 from django.urls import include, path
 
 urlpatterns = [
-    path('optimus/', admin.site.urls),
     path('', RedirectView.as_view(url='/auth/login/', permanent=False)),
+    path('optimus/', admin.site.urls),
     path('auth/', include('allauth.urls')),
     path('dashboard/', include('dashboard.urls')),
+    path('farm/', include(('farm.urls', 'farm'), namespace='farm')),
 ]

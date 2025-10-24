@@ -1,0 +1,17 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block body %}
+<div class="container my-5">
+  <h2>{{ farm }}</h2>
+  <dl class="row">
+    {% for field in farm._meta.fields %}
+      <dt class="col-sm-3">{{ field.verbose_name }}</dt>
+      <dd class="col-sm-9">{{ farm|attr:field.name }}</dd>
+    {% endfor %}
+  </dl>
+  <a class="btn btn-secondary" href="{% url 'farm_update' farm.pk %}">Edit</a>
+  <a class="btn btn-danger" href="{% url 'farm_delete' farm.pk %}">Delete</a>
+  <a class="btn btn-link" href="{% url 'farm:farm_list' %}">Back to list</a>
+</div>
+{% endblock %}

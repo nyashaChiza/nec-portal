@@ -1,0 +1,23 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block body %}
+<div class="container my-5">
+  <h3>Notices</h3>
+  <a class="btn btn-primary mb-3" href="{% url 'farm:notice_create' %}">Add Notice</a>
+  <ul class="list-group">
+    {% for n in notices %}
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <a href="{% url 'notice_detail' n.pk %}">{{ n }}</a>
+        <span>
+          <a class="btn btn-sm btn-outline-secondary" href="{% url 'notice_update' n.pk %}">Edit</a>
+          <a class="btn btn-sm btn-danger" href="{% url 'notice_delete' n.pk %}">Delete</a>
+        </span>
+      </li>
+    {% empty %}
+      <li class="list-group-item">No notices.</li>
+    {% endfor %}
+  </ul>
+  {% if is_paginated %}{% include 'layouts/pagination.html' %}{% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,131 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block body %}
+<div class="nk-content my-5">
+  <div class="row g-gs">
+    <div class="col-lg-6">
+      <div class="card h-100">
+        <div class="card-inner">
+          <div class="card-head">
+            <h5 class="card-title">Farm: {{ farm.name|default:"Unnamed Farm" }}</h5>
+          </div>
+
+          <ul class="nk-store-statistics">
+            <li class="item">
+              <div class="info">
+                <div class="title">Type / Sector</div>
+                <div class="count">{{ farm.sector|default:"—" }}</div>
+              </div>
+              <em class="icon bg-primary-dim ni ni-template"></em>
+            </li>
+
+            <li class="item">
+              <div class="info">
+                <div class="title">Owner</div>
+                <div class="count">
+                  {% if farm.owner %}
+                    {% if farm.owner.get_full_name %}{{ farm.owner.get_full_name }}{% else %}{{ farm.owner }}{% endif %}
+                  {% else %}
+                    —
+                  {% endif %}
+                </div>
+              </div>
+              <em class="icon bg-purple-dim ni ni-user-c"></em>
+            </li>
+
+            <li class="item">
+              <div class="info">
+                <div class="title">Contact</div>
+                <div class="count">{{ farm.telephone|default:"—" }}</div>
+              </div>
+              <em class="icon bg-purple-dim ni ni-mobile"></em>
+            </li>
+
+            <li class="item">
+              <div class="info">
+                <div class="title">Address</div>
+                <div class="count">{{ farm.address|default:"—" }}</div>
+              </div>
+              <em class="icon bg-purple-dim ni ni-map"></em>
+            </li>
+
+            <li class="item">
+              <div class="info">
+                <div class="title">Size</div>
+                <div class="count">
+                  {% if farm.size_in_hectares %}{{ farm.size_in_hectares }} ha{% else %}—{% endif %}
+                </div>
+              </div>
+              <em class="icon bg-primary-dim ni ni-growth"></em>
+            </li>
+
+            
+
+            <li class="item">
+              <div class="info">
+                <div class="title">Created On</div>
+                <div class="count">{{ farm.created|date:"SHORT_DATETIME_FORMAT" }}</div>
+              </div>
+              <em class="icon bg-purple-dim ni ni-clock"></em>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-6">
+      <div class="row g-gs">
+        <div class="col-xxl-12 ">
+          <div class="card">
+            <div class="nk-ecwg nk-ecwg3">
+              <div class="card-inner pb-0">
+                <div class="card-title-group">
+                  <div class="card-title">
+                    <h6 class="title">Summary</h6>
+                  </div>
+                </div>
+                <div class="data">
+                  <div class="data-group">
+                    <div class="amount">
+                      Employees:
+                      {% if farm.farmemployeestats_set.count %}{{ farm.farmemployeestats_set.count }}{% else %}0{% endif %}
+                    </div>
+                  </div>
+                </div>
+              </div><!-- .card-inner -->
+              <div class="nk-ecwg3-ck">
+                <canvas class="ecommerce-line-chart-s1" id="farmEmployeesChart" style="height:66px;"></canvas>
+              </div>
+            </div><!-- .nk-ecwg -->
+          </div><!-- .card -->
+        </div>
+
+        <div class="col-xxl-12 mt-2">
+          <div class="card">
+            <div class="nk-ecwg nk-ecwg3">
+              <div class="card-inner pb-0">
+                <div class="card-title-group">
+                  <div class="card-title">
+                    <h6 class="title">Activity</h6>
+                  </div>
+                </div>
+                <div class="data">
+                  <div class="data-group">
+                    <div class="amount">
+                      Site visits: {{ farm.sitevisit_set.count|default:"0" }}
+                    </div>
+                  </div>
+                </div>
+              </div><!-- .card-inner -->
+              <div class="nk-ecwg3-ck">
+                <canvas class="ecommerce-line-chart-s1" id="farmVisitsChart" style="height:66px;"></canvas>
+              </div>
+            </div><!-- .nk-ecwg -->
+          </div><!-- .card -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
