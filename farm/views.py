@@ -4,7 +4,8 @@ from django.views import generic
 from django.conf import settings
 
 from farm.models import Farm, SiteVisit, Notice, Statement, FarmEmployeeStats
-from farm.forms import FarmForm
+from farm.forms import FarmForm, StatementForm
+from django.core.exceptions import FieldError
 
 
 # Farm views
@@ -119,35 +120,52 @@ class NoticeDeleteView(generic.DeleteView):
 # Statement views
 class StatementListView(generic.ListView):
     model = Statement
-    template_name = "farm/statement_list.html"
+    template_name = "statements/index.html"
     context_object_name = "statements"
     paginate_by = 20
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        farm = self.request.GET.get("farm")
+        if not farm:
+            return qs
+
+        # try PK first, then fallback to slug if present; if neither works, return unfiltered qs
+        try:
+            return qs.filter(farm_id=int(farm))
+        except (ValueError, TypeError):
+            try:
+                return qs.filter(farm__slug=farm)
+            except FieldError:
+                return qs
 
 
 class StatementDetailView(generic.DetailView):
     model = Statement
-    template_name = "farm/statement_detail.html"
+    template_name = "statements/detail.html"
     context_object_name = "statement"
 
 
 class StatementCreateView(generic.CreateView):
     model = Statement
-    fields = "__all__"
-    template_name = "farm/statement_form.html"
+    form_class = StatementForm
+    template_name = "statements/create.html"
     success_url = reverse_lazy("farm:statement_list")
 
 
 class StatementUpdateView(generic.UpdateView):
     model = Statement
-    fields = "__all__"
-    template_name = "farm/statement_form.html"
+    form_class = StatementForm
+    template_name = "statements/update.html"
     success_url = reverse_lazy("farm:statement_list")
 
 
 class StatementDeleteView(generic.DeleteView):
     model = Statement
-    template_name = "farm/statement_confirm_delete.html"
     success_url = reverse_lazy("farm:statement_list")
+    def get(self, request, *args, **kwargs):
+        # perform delete immediately on GET (bypass confirm page)
+        return self.post(request, *args, **kwargs)
 
 
 # FarmEmployeeStats views

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Farm
+from .models import Farm, Statement
 
 
 class FarmForm(forms.ModelForm):
@@ -17,6 +17,27 @@ class FarmForm(forms.ModelForm):
           
     def __init__(self,  *args, **kwargs):
         super(FarmForm, self).__init__(*args, **kwargs) 
-#        self.fields["site"].widget = HiddenInput()
+        for field_name, field in self.fields.items():
+            field.widget.attrs["class"] = "form-control"
+
+
+class StatementForm(forms.ModelForm):
+    class Meta:
+        model = Statement
+        fields = [
+            "farm",
+            "period_start",
+            "period_end",
+            "currency",
+            "total_expenses",
+            "total_sales"
+        ]
+        widgets = {
+            "period_start": forms.DateInput(attrs={"type": "date"}),
+            "period_end": forms.DateInput(attrs={"type": "date"}),
+        }
+ 
+    def __init__(self, *args, **kwargs):
+        super(StatementForm, self).__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
             field.widget.attrs["class"] = "form-control"

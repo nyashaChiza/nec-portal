@@ -60,6 +60,7 @@ class Notice(models.Model):
 
 class Statement(models.Model):
     farm = models.ForeignKey(Farm, on_delete=models.CASCADE, related_name="statements")
+    currency = models.CharField(max_length=10, choices=[("USD", "USD"), ("ZWL", "ZWL")], default="USD")
     period_start = models.DateField()
     period_end = models.DateField()
     total_sales = models.DecimalField(max_digits=12, decimal_places=2, default=0)
@@ -74,8 +75,6 @@ class Statement(models.Model):
     def save(self, *args, **kwargs):
         self.balance = self.total_sales - self.total_expenses
         super().save(*args, **kwargs)
-
-
 
 
 

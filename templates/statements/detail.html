@@ -1,0 +1,92 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block body %}
+<div class="nk-content my-5">
+  <div class="container">
+    <div class="invoice-wrap">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+          <a class="btn btn-outline-secondary btn-sm" href="{% url 'farm:statement_list' %}"> Back</a>
+        </div>
+        <div class="d-flex gap-2">
+          <a class="btn btn-outline-secondary btn-md" href="{% url 'farm:statement_update' statement.pk %}">Edit</a>
+        <a class="btn btn-primary btn-md" href="#" onclick="(function(){var content=document.querySelector('.invoice-wrap'); if(!content) return false; var w=window.open('','_blank','width=900,height=650'); w.document.write('<!doctype html><html><head><meta charset=&quot;utf-8&quot;><title>Print</title>'); var links=document.querySelectorAll('link[rel=&quot;stylesheet&quot;], style'); for(var i=0;i<links.length;i++){w.document.write(links[i].outerHTML);} w.document.write('</head><body>'); w.document.write(content.outerHTML); w.document.write('</body></html>'); w.document.close(); w.focus(); setTimeout(function(){ w.print(); w.close(); }, 500); })(); return false;">Print</a>
+        </div>
+      </div>
+
+      <div class="invoice-brand text-center mb-3">
+        <h4 class="m-0">Statement</h4>
+      </div>
+
+      <div class="invoice-head">
+        <div class="invoice-contact">
+          <span class="overline-title">Statement For</span>
+          <div class="invoice-contact-info">
+            <h4 class="title">
+              {% if statement.farm %}
+                <a href="{% url 'farm:farm_detail' statement.farm.pk %}">{{ statement.farm.name }}</a>
+              {% else %}
+                — 
+              {% endif %}
+            </h4>
+
+            <ul class="list-plain">
+              {% if statement.farm and statement.farm.address %}
+                <li><em class="icon ni ni-map-pin-fill"></em><span>{{ statement.farm.address }}</span></li>
+              {% endif %}
+              {% if statement.farm and statement.farm.telephone %}
+                <li><em class="icon ni ni-call-fill"></em><span>{{ statement.farm.telephone }}</span></li>
+              {% endif %}
+              {% if statement.farm and statement.farm.owner %}
+                <li><em class="icon ni ni-user-fill"></em><span>
+                  {% if statement.farm.owner.get_full_name %}{{ statement.farm.owner.get_full_name }}{% else %}{{ statement.farm.owner }}{% endif %}
+                </span></li>
+              {% endif %}
+            </ul>
+          </div>
+        </div>
+
+        <div class="invoice-desc ">
+          <h3 class="title">Statement Details</h3>
+          <ul class="list-plain">
+            <li class="invoice-id"><span>Statement ID</span>:<span>{{ statement.pk }}</span></li>
+            <li><span>Period</span>:<span>{{ statement.period_start|date:"j M, Y" }} — {{ statement.period_end|date:"j M, Y" }}</span></li>
+            <li><span>Currency</span>:<span>{{ statement.currency }}</span></li>
+            <li class="invoice-date"><span>Created</span>:<span>{{ statement.created|date:"j M, Y H:i" }}</span></li>
+          </ul>
+        </div>
+      </div><!-- .invoice-head -->
+
+      <div class="invoice-bills mt-3">
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Description</th>
+                <th class="text-end">Amount ({{ statement.currency }})</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Total Sales</td>
+                <td class="text-end">{% if statement.currency == 'USD'%}${% endif%}{{ statement.total_sales|floatformat:2 }}{% if statement.currency == 'ZWL'%}ZIG{% endif%}</td>
+              </tr>
+              <tr>
+                <td>Total Expenses</td>
+                <td class="text-end">-{% if statement.currency == 'USD'%}${% endif%}{{ statement.total_expenses|floatformat:2 }}{% if statement.currency == 'ZWL'%}ZIG{% endif%}</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td class="text-end"><strong>Balance</strong></td>
+                <td class="text-end"><strong>{% if statement.currency == 'USD'%}${% endif%}{{ statement.balance|floatformat:2 }}{% if statement.currency == 'ZWL'%}ZIG{% endif%}</strong></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div><!-- .invoice-bills -->
+    </div><!-- .invoice-wrap -->
+  </div>
+</div>
+{% endblock %}
