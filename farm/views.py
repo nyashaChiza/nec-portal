@@ -4,7 +4,7 @@ from django.views import generic
 from django.conf import settings
 
 from farm.models import Farm, SiteVisit, Notice, Statement, FarmEmployeeStats
-from farm.forms import FarmForm, StatementForm, SiteVisitForm
+from farm.forms import FarmForm, StatementForm, SiteVisitForm, FarmEmployeeStatsForm
 from django.core.exceptions import FieldError
 
 
@@ -189,28 +189,43 @@ class StatementDeleteView(generic.DeleteView):
 # FarmEmployeeStats views
 class FarmEmployeeStatsListView(generic.ListView):
     model = FarmEmployeeStats
-    template_name = "farm/farmemployeestats_list.html"
+    template_name = "employees/index.html"
     context_object_name = "farm_employee_stats"
     paginate_by = 20
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        farm = self.request.GET.get("farm")
+        if not farm:
+            return qs
+
+        # try PK first, then fallback to slug if present; if neither works, return unfiltered qs
+        try:
+            return qs.filter(farm_id=int(farm))
+        except (ValueError, TypeError):
+            try:
+                return qs.filter(farm__slug=farm)
+            except FieldError:
+                return qs
 
 
 class FarmEmployeeStatsDetailView(generic.DetailView):
     model = FarmEmployeeStats
-    template_name = "farm/farmemployeestats_detail.html"
-    context_object_name = "farm_employee_stat"
+    template_name = "employees/detail.html"
+    context_object_name = "stat"
 
 
 class FarmEmployeeStatsCreateView(generic.CreateView):
     model = FarmEmployeeStats
-    fields = "__all__"
-    template_name = "farm/farmemployeestats_form.html"
+    form_class = FarmEmployeeStatsForm
+    template_name = "employees/create.html"
     success_url = reverse_lazy("farm:farmemployeestats_list")
 
 
 class FarmEmployeeStatsUpdateView(generic.UpdateView):
     model = FarmEmployeeStats
-    fields = "__all__"
-    template_name = "farm/farmemployeestats_form.html"
+    form_class = FarmEmployeeStatsForm
+    template_name = "employees/update.html"
     success_url = reverse_lazy("farm:farmemployeestats_list")
 
 

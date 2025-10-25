@@ -83,14 +83,16 @@ class Statement(models.Model):
 
 class FarmEmployeeStats(models.Model):
     EMPLOYMENT_TYPES = [
-        ("PERMANENT", "Permanent"),
-        ("SEASONAL", "Seasonal"),
-        ("CASUAL", "Casual"),
-        ("FIXED_TERM", "Fixed Term"),
+        ("Permanent", "Permanent"),
+        ("Seasonal", "Seasonal"),
+        ("Casual", "Casual"),
+        ("Fixed Term", "Fixed Term"),
     ]
 
     farm = models.ForeignKey("farm.Farm", on_delete=models.CASCADE, related_name="employee_stats")
-    reporting_month = models.DateField(help_text="The month this record applies to")
+    reporting_month = models.DateField(
+        help_text="The month this record applies to. Only month and year are considered; the day will be normalized to the first of the month."
+    )
     employment_type = models.CharField(max_length=20, choices=EMPLOYMENT_TYPES)
 
     # 🧍 Employee numbers

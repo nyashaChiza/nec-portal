@@ -1,0 +1,211 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block body %}
+<div class="nk-content my-5">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <div>
+        <a class="btn btn-outline-secondary btn-md" href="{% url 'farm:farmemployeestats_list' %}"> Back</a>
+      </div>
+      <div class="d-flex gap-2">
+        <a class="btn btn-outline-secondary btn-md" href="{% url 'farm:farmemployeestats_update' stat.pk %}">Edit</a>
+      </div>
+    </div>
+
+    <div class="row g-gs">
+      <!-- Left: Farm summary + headcounts -->
+      <div class="col-lg-6">
+        <div class="card h-100">
+          <div class="card-inner">
+            <div class="card-head">
+              <h5 class="card-title">Farm:
+                {% if stat.farm %}
+                  <a href="{% url 'farm:farm_detail' stat.farm.pk %}">{{ stat.farm.name }}</a>
+                {% else %}
+                  —
+                {% endif %}
+              </h5>
+              <span class="sub-text">{{ stat.reporting_month|date:"F Y" }} • {{ stat.employment_type }}</span>
+            </div>
+
+            <ul class="nk-store-statistics">
+              <li class="item">
+                <div class="info">
+                  <div class="title">Citizen (Male)</div>
+                  <div class="count">{{ stat.citizen_male|default:0 }}</div>
+                </div>
+                <em class="icon bg-primary-dim ni ni-user"></em>
+              </li>
+
+              <li class="item">
+                <div class="info">
+                  <div class="title">Citizen (Female)</div>
+                  <div class="count">{{ stat.citizen_female|default:0 }}</div>
+                </div>
+                <em class="icon bg-purple-dim ni ni-female"></em>
+              </li>
+
+              <li class="item">
+                <div class="info">
+                  <div class="title">Expat (Male)</div>
+                  <div class="count">{{ stat.expatriate_male|default:0 }}</div>
+                </div>
+                <em class="icon bg-info-dim ni ni-user-check"></em>
+              </li>
+
+              <li class="item">
+                <div class="info">
+                  <div class="title">Expat (Female)</div>
+                  <div class="count">{{ stat.expatriate_female|default:0 }}</div>
+                </div>
+                <em class="icon bg-warning-dim ni ni-user"></em>
+              </li>
+
+              <li class="item">
+                <div class="info">
+                  <div class="title">Total Workers</div>
+                  <div class="count">
+                    {% with cm=stat.citizen_male|default:0 cf=stat.citizen_female|default:0 em=stat.expatriate_male|default:0 ef=stat.expatriate_female|default:0 %}
+                      {{ cm|add:cf|add:em|add:ef }}
+                    {% endwith %}
+                  </div>
+                </div>
+                <em class="icon bg-success-dim ni ni-users"></em>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Payroll & contributions (refactored layout + color differentiation) -->
+      <div class="col-lg-6">
+        <div class="card">
+          <div class="card-inner">
+            <div class="card-head">
+              <h5 class="card-title">Payroll & Contributions</h5>
+              <p class="sub-text">Amounts shown in both currencies where available</p>
+            </div>
+
+            <!-- two-column compact grid for items -->
+            <div class="row g-2">
+              <div class="col-6">
+                <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                  <div class="text-muted small">Basic Pay (USD)</div>
+                  <div class="text-primary fw-semibold">{{ stat.basic_pay_usd|floatformat:2 }}</div>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                  <div class="text-muted small">Basic Pay (ZWL)</div>
+                  <div class="text-primary fw-semibold">{{ stat.basic_pay_zwl|floatformat:2 }}</div>
+                </div>
+              </div>
+
+              <div class="col-6">
+                <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                  <div class="text-muted small">Employees' Contribution (USD)</div>
+                  <div class="text-primary fw-semibold">{{ stat.employees_contribution_usd|floatformat:2 }}</div>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                  <div class="text-muted small">Employees' Contribution (ZWL)</div>
+                  <div class="text-primary fw-semibold">{{ stat.employees_contribution_zwl|floatformat:2 }}</div>
+                </div>
+              </div>
+
+              <div class="col-6">
+                <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                  <div class="text-muted small">Employers' Contribution (USD)</div>
+                  <div class="text-primary fw-semibold">{{ stat.employers_contribution_usd|floatformat:2 }}</div>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                  <div class="text-muted small">Employers' Contribution (ZWL)</div>
+                  <div class="text-primary fw-semibold">{{ stat.employers_contribution_zwl|floatformat:2 }}</div>
+                </div>
+              </div>
+
+              <div class="col-6">
+                <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                  <div class="text-muted small">Arrears (USD)</div>
+                  <div class="text-primary fw-semibold">-{{ stat.arrears_usd|floatformat:2 }}</div>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                  <div class="text-muted small">Arrears (ZWL)</div>
+                  <div class="text-primary fw-semibold">-{{ stat.arrears_zwl|floatformat:2 }}</div>
+                </div>
+              </div>
+
+              <!-- totals: full width, emphasized -->
+              <div class="col-12 mt-2">
+                <div class="d-flex justify-content-between align-items-center py-3 bg-light rounded">
+                  <div class="text-muted small">Total Contribution (USD)</div>
+                  <div class="text-primary h6 mb-0">{{ stat.total_contribution_usd|default:0|floatformat:2 }}</div>
+                </div>
+              </div>
+              <div class="col-12 mt-2">
+                <div class="d-flex justify-content-between align-items-center py-3 bg-light rounded">
+                  <div class="text-muted small">Total Contribution (ZWL)</div>
+                  <div class="text-primary h6 mb-0">{{ stat.total_contribution_zwl|default:0|floatformat:2 }}</div>
+                </div>
+              </div>
+
+              <div class="col-12 mt-3">
+                
+                <div class="d-flex justify-content-between align-items-center mt-2">
+                  <div class="text-muted small">Created</div>
+                  <div class="text-muted">{{ stat.created|date:"j M, Y H:i" }}</div>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mt-1">
+                  <div class="text-muted small">Last updated</div>
+                  <div class="text-muted">{{ stat.updated|date:"j M, Y H:i" }}</div>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="mt-3">
+              <h6 class="title">Notes</h6>
+              <div class="card card-bordered">
+                <div class="card-inner">
+                  {% if stat.notes %}
+                    <p class="mb-0">{{ stat.notes }}</p>
+                  {% else %}
+                    <p class="text-muted mb-0">No notes provided.</p>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Delete modal -->
+    <div class="modal fade" id="deleteStatModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-body text-center py-4">
+            <h5 class="mb-3">Remove Record</h5>
+            <p class="small text-muted mb-3">Are you sure you want to remove the employee stats for <strong>{{ stat.farm.name|default:"—" }}</strong> ({{ stat.reporting_month|date:"F Y" }})?</p>
+            <div class="d-flex gap-2 justify-content-center">
+              <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+              <form method="post" action="{% url 'farm:farmemployeestats_delete' stat.pk %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Remove</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

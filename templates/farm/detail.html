@@ -89,7 +89,7 @@
                   <div class="data-group">
                     <div class="amount">
                       Employees:
-                      {% if farm.farmemployeestats_set.count %}{{ farm.farmemployeestats_set.count }}{% else %}0{% endif %}
+                      {% if farm.employee_stats.count %}{{ farm.employee_stats.count }}{% else %}0{% endif %}
                     </div>
                   </div>
                 </div>
@@ -113,7 +113,7 @@
                 <div class="data">
                   <div class="data-group">
                     <div class="amount">
-                      Site visits: {{ farm.sitevisit_set.count|default:"0" }}
+                      Site visits: {{ farm.visits.count|default:"0" }}
                     </div>
                   </div>
                 </div>
