@@ -9,4 +9,5 @@ urlpatterns = [
     path('auth/', include('allauth.urls')),
     path('dashboard/', include('dashboard.urls')),
     path('farm/', include(('farm.urls', 'farm'), namespace='farm')),
+    path('users/', include(('accounts.urls', 'user'), namespace='user')),
 ]

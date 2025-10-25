@@ -4,7 +4,7 @@ from django.views import generic
 from django.conf import settings
 
 from farm.models import Farm, SiteVisit, Notice, Statement, FarmEmployeeStats
-from farm.forms import FarmForm, StatementForm, SiteVisitForm, FarmEmployeeStatsForm
+from farm.forms import FarmForm, StatementForm, SiteVisitForm, FarmEmployeeStatsForm, NoticeForm
 from django.core.exceptions import FieldError
 
 
@@ -104,35 +104,38 @@ class SiteVisitDeleteView(generic.DeleteView):
 # Notice views
 class NoticeListView(generic.ListView):
     model = Notice
-    template_name = "farm/notice_list.html"
+    template_name = "notices/index.html"
     context_object_name = "notices"
     paginate_by = 20
 
 
 class NoticeDetailView(generic.DetailView):
     model = Notice
-    template_name = "farm/notice_detail.html"
+    template_name = "notices/detail.html"
     context_object_name = "notice"
 
 
 class NoticeCreateView(generic.CreateView):
     model = Notice
-    fields = "__all__"
-    template_name = "farm/notice_form.html"
+    form_class = NoticeForm
+    template_name = "notices/create.html"
     success_url = reverse_lazy("farm:notice_list")
 
 
 class NoticeUpdateView(generic.UpdateView):
     model = Notice
-    fields = "__all__"
-    template_name = "farm/notice_form.html"
+    form_class = NoticeForm
+    template_name = "notices/update.html"
     success_url = reverse_lazy("farm:notice_list")
 
 
 class NoticeDeleteView(generic.DeleteView):
     model = Notice
-    template_name = "farm/notice_confirm_delete.html"
     success_url = reverse_lazy("farm:notice_list")
+
+    def get(self, request, *args, **kwargs):
+        # perform delete immediately on GET (bypass confirm page)
+        return self.post(request, *args, **kwargs)
 
 
 # Statement views

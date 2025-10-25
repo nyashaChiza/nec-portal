@@ -1,14 +1,219 @@
 {% extends 'layouts/base.html' %}
 {% load static %}
 
-
-
 {% block body %}
-<div class="nk-content my-4 ">
-    <div class="container-fluid">
-        <div class="nk-content-inner">
-            
+<div class="nk-content dashboard-page">
+  <div class="container-fluid">
+    <div class="nk-content-inner">
+      <div class="nk-content-body">
+        <div class="nk-block-head nk-block-head-sm">
+          <div class="nk-block-between">
+            <div class="nk-block-head-content">
+              <h3 class="nk-block-title page-title">Dashboard</h3>
+              <div class="nk-block-des text-soft">
+                <p>
+                  Overview of platform activity
+                  {% if is_manager_scope %}(scoped to your farms){% endif %}.
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
+
+        <!-- Top stat cards -->
+        <div class="nk-block">
+          <div class="row g-gs">
+            <!-- USERS -->
+            <div class="col-md-3">
+              <div class="card card-bordered card-hover bg-grad-azure text-white shadow-sm">
+                <div class="card-inner text-center py-4">
+                  <div class="icon-circle mb-3">
+                    <em class="icon ni ni-user-fill fs-3"></em>
+                  </div>
+                  <h6 class="title mb-1">Users</h6>
+                  <p class="sub-text small text-light">Total Accounts</p>
+                  <h3 class="amount mt-2 mb-3">{{ counts.users }}</h3>
+                  <a href="#" class="btn btn-outline-light btn-sm">
+                    Active Users: {{ counts.users }}
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- FARMS -->
+            <div class="col-md-3">
+              <div class="card card-bordered card-hover bg-grad-pink text-white shadow-sm">
+                <div class="card-inner text-center py-4">
+                  <div class="icon-circle mb-3">
+                    <em class="icon ni ni-home-alt-fill fs-3"></em>
+                  </div>
+                  <h6 class="title mb-1">Farms</h6>
+                  <p class="sub-text small text-light">Managed Farms</p>
+                  <h3 class="amount mt-2 mb-3">{{ counts.farms }}</h3>
+                  <a href="{% url 'farm:farm_list' %}" class="btn btn-outline-light btn-sm">
+                    View Farms
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- VISITS -->
+            <div class="col-md-3">
+              <div class="card card-bordered card-hover bg-grad-green text-white shadow-sm">
+                <div class="card-inner text-center py-4">
+                  <div class="icon-circle mb-3">
+                    <em class="icon ni ni-map-pin-fill fs-3"></em>
+                  </div>
+                  <h6 class="title mb-1">Visits</h6>
+                  <p class="sub-text small text-light">Site Visits</p>
+                  <h3 class="amount mt-2 mb-3">{{ counts.sitevisits }}</h3>
+                  <a href="{% url 'farm:sitevisit_list' %}" class="btn btn-outline-light btn-sm">
+                    Recent Visits
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- STATEMENTS -->
+            <div class="col-md-3">
+              <div class="card card-bordered card-hover bg-grad-indigo text-white shadow-sm">
+                <div class="card-inner text-center py-4">
+                  <div class="icon-circle mb-3">
+                    <em class="icon ni ni-reports fs-3"></em>
+                  </div>
+                  <h6 class="title mb-1">Statements</h6>
+                  <p class="sub-text small text-light">Financial Reports</p>
+                  <h3 class="amount mt-2 mb-3">{{ counts.statements }}</h3>
+                  <a href="{% url 'farm:statement_list' %}" class="btn btn-outline-light btn-sm">
+                    Open Statements
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- LOWER ROW -->
+          <div class="row g-gs mt-3">
+            <!-- EMPLOYEE STATS -->
+            <div class="col-lg-6">
+              <div class="card card-bordered card-hover shadow-sm">
+                <div class="card-inner">
+                  <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                      <h6 class="title mb-1">Employee Stats</h6>
+                      <p class="sub-text small text-muted">Payroll & Contributions</p>
+                    </div>
+                    <em class="icon ni ni-briefcase-fill text-primary fs-3"></em>
+                  </div>
+
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                      <div class="text-muted small">Records</div>
+                      <h4 class="fw-bold mb-0">{{ counts.employee_stats }}</h4>
+                    </div>
+                    <a href="{% url 'farm:farmemployeestats_list' %}" class="btn btn-outline-primary btn-sm">
+                      View Records
+                    </a>
+                  </div>
+
+                  <div class="mt-4">
+                    <div class="progress-label d-flex justify-content-between small mb-1">
+                      <span>Most Recent Month</span>
+                      <span>45%</span>
+                    </div>
+                    <div class="progress progress-md rounded-pill">
+                      <div class="progress-bar bg-primary"
+                        style="width: 45%; background: linear-gradient(90deg,#7b61ff,#2ec4b6);">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- NOTICES -->
+            <div class="col-lg-6">
+              <div class="card card-bordered card-hover shadow-sm">
+                <div class="card-inner">
+                  <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                      <h6 class="title mb-1">Active Notices</h6>
+                      <p class="sub-text small text-muted">Click a notice to view</p>
+                    </div>
+                    <a href="{% url 'farm:notice_list' %}" class="link text-primary small">View All</a>
+                  </div>
+
+                  <div id="noticeCarousel" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                      {% if active_notices %}
+                        {% for notice in active_notices %}
+                          <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                            <div class="p-3">
+                              <h6 class="mb-1">{{ notice.title }}</h6>
+                              <p class="mb-2 text-muted small">{{ notice.message|truncatechars:180 }}</p>
+                              <small class="text-muted">
+                                By {{ notice.issued_by }} • {{ notice.created|date:"j M, Y" }}
+                              </small>
+                            </div>
+                          </div>
+                        {% endfor %}
+                      {% else %}
+                        <div class="carousel-item active text-center text-muted p-3">
+                          No active notices.
+                        </div>
+                      {% endif %}
+                    </div>
+
+                    <button class="carousel-control-prev" type="button" data-bs-target="#noticeCarousel" data-bs-slide="prev">
+                      <span class="carousel-control-prev-icon"></span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#noticeCarousel" data-bs-slide="next">
+                      <span class="carousel-control-next-icon"></span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div> <!-- .nk-block -->
+      </div>
     </div>
+  </div>
 </div>
+
+<style>
+.dashboard-page .card-hover {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.dashboard-page .card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+}
+.dashboard-page .icon-circle {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+.dashboard-page .bg-grad-azure {
+  background: linear-gradient(135deg, #6ad1ff 0%, #3a7bd5 100%);
+}
+.dashboard-page .bg-grad-pink {
+  background: linear-gradient(135deg, #ff7eb6 0%, #ff758c 100%);
+}
+.dashboard-page .bg-grad-green {
+  background: linear-gradient(135deg, #7de0a3 0%, #2bb673 100%);
+}
+.dashboard-page .bg-grad-indigo {
+  background: linear-gradient(135deg, #9b8cff 0%, #5b6cff 100%);
+}
+.dashboard-page .amount {
+  font-size: 2rem;
+  font-weight: 700;
+}
+</style>
 {% endblock %}

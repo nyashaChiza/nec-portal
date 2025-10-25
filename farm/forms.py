@@ -1,5 +1,5 @@
 from django import forms
-from .models import Farm, Statement, SiteVisit, FarmEmployeeStats
+from .models import Farm, Statement, SiteVisit, FarmEmployeeStats, Notice
 
 
 class FarmForm(forms.ModelForm):
@@ -148,3 +148,17 @@ class FarmEmployeeStatsForm(forms.ModelForm):
             self.save_m2m()
         return inst
 
+
+class NoticeForm(forms.ModelForm):
+    class Meta:
+        model = Notice
+        fields = [
+            "title",
+            "message",
+            "issued_by"
+        ]
+        
+    def __init__(self, *args, **kwargs):
+        super(NoticeForm, self).__init__(*args, **kwargs)
+        for _, field in self.fields.items():
+            field.widget.attrs["class"] = "form-control"
