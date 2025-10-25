@@ -24,18 +24,21 @@ class Farm(models.Model):
 
 class SiteVisit(models.Model):
     STATUS_CHOICES = [
-        ("PENDING", "Pending"),
-        ("IN_PROGRESS", "In Progress"),
-        ("RESOLVED", "Resolved"),
+        ("Pending", "Pending"),
+        ("In Progress", "In Progress"),
+        ("Resolved", "Resolved"),
+        ("Completed", "Completed"),
+        ("Planned", "Planned"),
     ]
 
     farm = models.ForeignKey(Farm, on_delete=models.CASCADE, related_name="visits")
     agent = models.ForeignKey(
         User, on_delete=models.SET_NULL, null=True, related_name="site_visits"
     )
+    purpose = models.CharField(max_length=100, default="General Inspection")
     visit_date = models.DateField()
     notes = models.TextField(blank=True)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="PENDING")
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="Pending")
     resolution_notes = models.TextField(blank=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)

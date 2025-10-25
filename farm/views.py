@@ -4,7 +4,7 @@ from django.views import generic
 from django.conf import settings
 
 from farm.models import Farm, SiteVisit, Notice, Statement, FarmEmployeeStats
-from farm.forms import FarmForm, StatementForm
+from farm.forms import FarmForm, StatementForm, SiteVisitForm
 from django.core.exceptions import FieldError
 
 
@@ -52,35 +52,53 @@ class FarmDeleteView(generic.DeleteView):
 # SiteVisit views
 class SiteVisitListView(generic.ListView):
     model = SiteVisit
-    template_name = "farm/sitevisit_list.html"
-    context_object_name = "sitevisits"
+    template_name = "visits/index.html"
+    context_object_name = "site_visits"
     paginate_by = 20
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        farm = self.request.GET.get("farm")
+        if not farm:
+            return qs
+
+        # try PK first, then fallback to slug if present; if neither works, return unfiltered qs
+        try:
+            return qs.filter(farm_id=int(farm))
+        except (ValueError, TypeError):
+            try:
+                return qs.filter(farm__slug=farm)
+            except FieldError:
+                return qs
 
 
 class SiteVisitDetailView(generic.DetailView):
     model = SiteVisit
-    template_name = "farm/sitevisit_detail.html"
+    template_name = "visits/detail.html"
     context_object_name = "sitevisit"
 
 
 class SiteVisitCreateView(generic.CreateView):
     model = SiteVisit
-    fields = "__all__"
-    template_name = "farm/sitevisit_form.html"
+    form_class = SiteVisitForm
+    template_name = "visits/create.html"
     success_url = reverse_lazy("farm:sitevisit_list")
 
 
 class SiteVisitUpdateView(generic.UpdateView):
     model = SiteVisit
-    fields = "__all__"
-    template_name = "farm/sitevisit_form.html"
+    form_class = SiteVisitForm
+    template_name = "visits/update.html"
+    context_object_name = "sitevisit"
     success_url = reverse_lazy("farm:sitevisit_list")
 
 
 class SiteVisitDeleteView(generic.DeleteView):
     model = SiteVisit
-    template_name = "farm/sitevisit_confirm_delete.html"
     success_url = reverse_lazy("farm:sitevisit_list")
+
+    def get(self, request, *args, **kwargs):
+        return self.post(request, *args, **kwargs)
 
 
 # Notice views

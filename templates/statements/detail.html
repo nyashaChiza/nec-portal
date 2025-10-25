@@ -7,7 +7,7 @@
     <div class="invoice-wrap">
       <div class="d-flex justify-content-between align-items-center mb-3">
         <div>
-          <a class="btn btn-outline-secondary btn-sm" href="{% url 'farm:statement_list' %}"> Back</a>
+          <a class="btn btn-outline-secondary btn-sm" href="{% url 'farm:statement_list' %}?farm={{statement.farm.pk}}"> Back</a>
         </div>
         <div class="d-flex gap-2">
           <a class="btn btn-outline-secondary btn-md" href="{% url 'farm:statement_update' statement.pk %}">Edit</a>

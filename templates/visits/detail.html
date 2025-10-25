@@ -1,0 +1,209 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block body %}
+<div class="nk-content my-5">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <div>
+        <a class="btn btn-outline-secondary btn-md" href="{% url 'farm:sitevisit_list'  %}?farm={{sitevisit.farm.pk}}"> Back to Visits</a>
+      </div>
+      <div class="d-flex gap-2">
+        <a class="btn btn-outline-secondary" href="{% url 'farm:sitevisit_update' sitevisit.pk %}">Edit</a>
+        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteVisitModal">Delete</button>
+        <a class="btn btn-primary" href="#" onclick="window.print();return false;">Print</a>
+      </div>
+    </div>
+
+    <div class="row g-gs">
+      <!-- Left: Farm summary -->
+      <div class="col-lg-6">
+        <div class="card h-100">
+          <div class="card-inner">
+            <div class="card-head">
+              <h5 class="card-title">Farm: 
+                {% if sitevisit.farm %}
+                  <a href="{% url 'farm:farm_detail' sitevisit.farm.pk %}">{{ sitevisit.farm }}</a>
+                {% else %}
+                  Unknown
+                {% endif %}
+              </h5>
+            </div>
+
+            <ul class="nk-store-statistics">
+              <li class="item">
+                <div class="info">
+                  <div class="title">Sector / Type</div>
+                  <div class="count">{{ sitevisit.farm.sector }}</div>
+                </div>
+                <em class="icon bg-primary-dim ni ni-template"></em>
+              </li>
+
+              <li class="item">
+                <div class="info">
+                  <div class="title">Owner</div>
+                  <div class="count">
+                    {% if sitevisit.farm and sitevisit.farm.owner %}
+                      {% if sitevisit.farm.owner %}{{ sitevisit.farm.owner }}{% else %}{{ sitevisit.farm.owner }}{% endif %}
+                    {% else %}
+                      —
+                    {% endif %}
+                  </div>
+                </div>
+                <em class="icon bg-purple-dim ni ni-user-c"></em>
+              </li>
+
+              <li class="item">
+                <div class="info">
+                  <div class="title">Contact</div>
+                  <div class="count">{{ sitevisit.farm.telephone }}</div>
+                </div>
+                <em class="icon bg-purple-dim ni ni-mobile"></em>
+              </li>
+
+              <li class="item">
+                <div class="info">
+                  <div class="title">Address</div>
+                  <div class="count">{{ sitevisit.farm.address}}</div>
+                </div>
+                <em class="icon bg-purple-dim ni ni-map"></em>
+              </li>
+
+              <li class="item">
+                <div class="info">
+                  <div class="title">Farm Created</div>
+                  <div class="count">
+                    {% if sitevisit.farm and sitevisit.farm.created %}
+                      {{ sitevisit.farm.created|date:"SHORT_DATETIME_FORMAT" }}
+                    {% else %}
+                      —
+                    {% endif %}
+                  </div>
+                </div>
+                <em class="icon bg-purple-dim ni ni-clock"></em>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Visit details -->
+      <div class="col-lg-6">
+        <div class="card">
+          <div class="card-inner">
+            <div class="card-head">
+              <h5 class="card-title">Site Visit Details</h5>
+            </div>
+
+            <div class="row gy-3">
+              <div class="col-12">
+                <div class="nk-info">
+                  <div class="nk-info-list">
+                    <div class="nk-info-item">
+                      <span class="nk-info-name">Visit ID</span>
+                      <span class="nk-info-value">#{{ sitevisit.pk }}</span>
+                    </div>
+                    <div class="nk-info-item">
+                      <span class="nk-info-name">Date</span>
+                      <span class="nk-info-value">
+                        {% if sitevisit.visit_date %}{{ sitevisit.visit_date|date:"j M, Y" }}{% else %}—{% endif %}
+                        {% if sitevisit.visit_date %} {{ sitevisit.visit_date|time:"H:i" }}{% endif %}
+                      </span>
+                    </div>
+                    <div class="nk-info-item">
+                      <span class="nk-info-name">Purpose</span>
+                      <span class="nk-info-value">{{ sitevisit.purpose }}</span>
+                    </div>
+                    <div class="nk-info-item">
+                      <span class="nk-info-name">Conducted by</span>
+                      <span class="nk-info-value">
+                        {% if sitevisit.agent %}
+                          {% if sitevisit.agent %}{{ sitevisit.agent }}{% else %}{{ sitevisit.agent }}{% endif %}
+                        {% else %}
+                          — 
+                        {% endif %}
+                      </span>
+                    </div>
+                    <div class="nk-info-item">
+                      <span class="nk-info-name">Status</span>
+                      <span class="nk-info-value">
+                        <span class="badge  {% if sitevisit.status == 'Completed' %}bg-success{% elif sitevisit.status == 'Planned' %}bg-warning{% else %}bg-primary{% endif %}">
+                          {{ sitevisit.status }}
+                        </span>
+                      </span>
+                    </div>
+                    <div class="nk-info-item">
+                      <span class="nk-info-name">Created</span>
+                      <span class="nk-info-value">{{ sitevisit.created|date:"j M, Y H:i" }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-12">
+                <h6 class="title">Notes</h6>
+                <div class="card card-bordered">
+                  <div class="card-inner">
+                    {% if sitevisit.notes %}
+                      <p class="mb-0">{{ sitevisit.notes }}</p>
+                    {% else %}
+                      <p class="text-muted mb-0">No notes for this visit.</p>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-12">
+                <h6 class="title">Recommendations / Actions</h6>
+                <div class="card card-bordered">
+                  <div class="card-inner">
+                    {% if sitevisit.resolution_notes %}
+                      <p class="mb-0">{{ sitevisit.resolution_notes }}</p>
+                    {% else %}
+                      <p class="text-muted mb-0">No recommendations recorded.</p>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+
+              {% if sitevisit.attachments.exists %}
+              <div class="col-12">
+                <h6 class="title">Attachments</h6>
+                <div class="list-group">
+                  {% for attach in sitevisit.attachments.all %}
+                    <a href="{{ attach.file.url }}" class="list-group-item list-group-item-action" target="_blank">
+                      <em class="icon ni ni-file"></em> {{ attach.name|default:attach.file.name }}
+                    </a>
+                  {% endfor %}
+                </div>
+              </div>
+              {% endif %}
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Delete modal -->
+    <div class="modal fade" id="deleteVisitModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-body text-center py-4">
+            <h5 class="mb-3">Remove Site Visit</h5>
+            <p class="small text-muted mb-3">Are you sure you want to remove visit <strong>#{{ sitevisit.pk }}</strong>?</p>
+            <div class="d-flex gap-2 justify-content-center">
+              <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+              <form method="post" action="{% url 'farm:sitevisit_delete' sitevisit.pk %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Remove</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

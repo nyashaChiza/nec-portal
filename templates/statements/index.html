@@ -55,8 +55,8 @@
             <div class="modal-dialog modal-sm modal-dialog-centered">
               <div class="modal-content">
                 <div class="modal-body text-center py-4">
-                  <h5 class="mb-3">Remove farm</h5>
-                  <p class="small text-muted mb-3">Are you sure you want to remove <strong>{{ farm.name|default:"—" }}</strong>?</p>
+                  <h5 class="mb-3">Remove {{statement.currency}} statement</h5>
+                  <p class="small text-muted mb-3">Are you sure you want to remove this {{statement.currency}} statement?</p>
                   <div class="d-flex gap-2 justify-content-center">
                     <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
                     <a href="{% url 'farm:statement_delete' statement.pk %}" class="btn btn-danger">Remove</a>
