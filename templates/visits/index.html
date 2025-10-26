@@ -6,7 +6,7 @@
   <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-3">
       <h3 class="mb-0">Site Visits</h3>
-      <a class="btn btn-primary" href="{% url 'farm:sitevisit_create' %}">Add Visit</a>
+      {% if request.user.role == 'Designated Agent' %}<a class="btn btn-primary" href="{% url 'farm:sitevisit_create' %}">Add Visit</a>{% endif %}
     </div>
 
     <div class="card card-bordered">
@@ -47,9 +47,9 @@
                 <li>
                   <a class="btn btn-sm btn-outline-secondary" href="{% url 'farm:sitevisit_detail' visit.pk %}">View</a>
                 </li>
-                <li>
+                {% if request.user.role == 'Designated Agent' %}<li>
                   <a class="btn btn-sm btn-outline-secondary" href="{% url 'farm:sitevisit_update' visit.pk %}">Update</a>
-                </li>
+                </li>{% endif %}
               </ul>
             </div>
           </div>

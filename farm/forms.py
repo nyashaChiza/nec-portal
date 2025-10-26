@@ -1,4 +1,5 @@
 from django import forms
+from accounts.models import CustomUser as User
 from .models import Farm, Statement, SiteVisit, FarmEmployeeStats, Notice
 
 
@@ -52,16 +53,24 @@ class SiteVisitForm(forms.ModelForm):
             "visit_date",
             "notes",
             "status",
-            "resolution_notes"
+            "resolution_notes",
         ]
         widgets = {
             "visit_date": forms.DateInput(attrs={"type": "date"}),
         }
- 
+
     def __init__(self, *args, **kwargs):
-        super(SiteVisitForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
+
+        # Restrict agent dropdown to Designated Agents only
+        self.fields["agent"].queryset = (
+            User.objects.filter(role="Designated Agent").order_by("first_name", "last_name")
+        )
+
+        # Add consistent Bootstrap/Styling classes
         for field_name, field in self.fields.items():
-            field.widget.attrs["class"] = "form-control"
+            existing_classes = field.widget.attrs.get("class", "")
+            field.widget.attrs["class"] = f"{existing_classes} form-control".strip()
 
 
 class FarmEmployeeStatsForm(forms.ModelForm):
@@ -87,11 +96,7 @@ class FarmEmployeeStatsForm(forms.ModelForm):
             "created_by": forms.HiddenInput(),
             "farm": forms.Select(attrs={"class": "form-control"}),
         }
-        # set the logged-in user as the default in the form __init__, e.g.:
-        # def __init__(self, *args, user=None, **kwargs):
-        #     super().__init__(*args, **kwargs)
-        #     if user is not None:
-        #         self.fields['created_by'].initial = user
+
 
     def __init__(self, *args, **kwargs):
         super(FarmEmployeeStatsForm, self).__init__(*args, **kwargs)
@@ -157,7 +162,7 @@ class NoticeForm(forms.ModelForm):
             "message",
             "issued_by"
         ]
-        
+
     def __init__(self, *args, **kwargs):
         super(NoticeForm, self).__init__(*args, **kwargs)
         for _, field in self.fields.items():

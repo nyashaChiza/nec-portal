@@ -15,6 +15,17 @@ class FarmListView(generic.ListView):
     context_object_name = "farms"
     paginate_by = 20
 
+    def get_queryset(self):
+        qs = super().get_queryset()
+        user = self.request.user
+
+        # Only show farms managed by this user if they’re a Manager
+        if user.is_authenticated and user.role == "Manager":
+            qs = qs.filter(owner=user)
+
+        # Admins see all farms
+        return qs
+
 
 class FarmDetailView(generic.DetailView):
     model = Farm
@@ -191,6 +202,7 @@ class StatementCreateView(generic.CreateView):
     success_url = reverse_lazy("farm:statement_list")
 
 
+
 class StatementUpdateView(generic.UpdateView):
     model = Statement
     form_class = StatementForm
@@ -241,12 +253,44 @@ class FarmEmployeeStatsCreateView(generic.CreateView):
     template_name = "employees/create.html"
     success_url = reverse_lazy("farm:farmemployeestats_list")
 
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        user = self.request.user
+
+        # Filter farm options based on the logged-in user's role
+        if user.is_authenticated:
+            if user.role == "Manager":
+                form.fields["farm"].queryset = user.farms.all()
+            elif user.role == "Admin":
+                form.fields["farm"].queryset = Farm.objects.all()
+            else:
+                form.fields["farm"].queryset = Farm.objects.none()  # restrict others
+
+        return form
+
+
 
 class FarmEmployeeStatsUpdateView(generic.UpdateView):
     model = FarmEmployeeStats
     form_class = FarmEmployeeStatsForm
     template_name = "employees/update.html"
     success_url = reverse_lazy("farm:farmemployeestats_list")
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        user = self.request.user
+
+        # Filter farm options based on the logged-in user's role
+        if user.is_authenticated:
+            if user.role == "Manager":
+                form.fields["farm"].queryset = user.farms.all()
+            elif user.role == "Admin":
+                form.fields["farm"].queryset = Farm.objects.all()
+            else:
+                form.fields["farm"].queryset = Farm.objects.none()  # restrict others
+
+        return form
+
 
 
 class FarmEmployeeStatsDeleteView(generic.DeleteView):

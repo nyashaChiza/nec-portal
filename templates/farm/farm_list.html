@@ -6,7 +6,7 @@
   <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-3">
       <h3 class="mb-0">Farms</h3>
-      <a class="btn btn-primary" href="{% url 'farm:farm_create' %}">Add Farm</a>
+      {% if request.user.role == 'Manager' %}<a class="btn btn-primary" href="{% url 'farm:farm_create' %}">Add Farm</a>{% endif %}
     </div>
 
     <div class="card card-bordered">
@@ -40,9 +40,10 @@
 
             <div class="nk-tb-col nk-tb-col-tools">
               <ul class="nk-tb-actions gx-1 justify-content-end">
-                <li>
+                {% if request.user.role == 'Manager' %}<li>
                   <a class="btn btn-sm btn-outline-secondary" href="{% url 'farm:farm_update' farm.pk %}">Edit</a>
                 </li>
+                {% endif %}
                 <li>
                   <a class="btn btn-sm btn-outline-info" href="{% url 'farm:statement_list' %}?farm={{ farm.pk }}">Statements</a>
                 </li>

@@ -24,6 +24,7 @@
         <div class="nk-block">
           <div class="row g-gs">
             <!-- USERS -->
+            {% if request.user == 'Admin' or request.user.is_staff %}
             <div class="col-md-3">
               <div class="card card-bordered card-hover bg-grad-azure text-white shadow-sm">
                 <div class="card-inner text-center py-4">
@@ -39,6 +40,7 @@
                 </div>
               </div>
             </div>
+            {% endif %}
 
             <!-- FARMS -->
             <div class="col-md-3">
@@ -140,7 +142,7 @@
                       <h6 class="title mb-1">Active Notices</h6>
                       <p class="sub-text small text-muted">Click a notice to view</p>
                     </div>
-                    <a href="{% url 'farm:notice_list' %}" class="link text-primary small">View All</a>
+                    {% if request.user == 'Admin' or request.user.is_staff %}<a href="{% url 'farm:notice_list' %}" class="link text-primary small">View All</a>{% endif %}
                   </div>
 
                   <div id="noticeCarousel" class="carousel slide" data-bs-ride="carousel">

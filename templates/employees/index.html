@@ -6,7 +6,7 @@
   <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-3">
       <h3 class="mb-0">Employee Stats</h3>
-      <a class="btn btn-primary" href="{% url 'farm:farmemployeestats_create' %}">Add Record</a>
+      {% if request.user.role == 'Manager' or request.user.role == 'Admin' or request.user.role == 'Accountant' %}<a class="btn btn-primary" href="{% url 'farm:farmemployeestats_create' %}">Add Record</a>{% endif %}
     </div>
 
     <div class="card card-bordered">
@@ -55,12 +55,12 @@
                 <li>
                   <a class="btn btn-sm btn-outline-secondary" href="{% url 'farm:farmemployeestats_detail' stat.pk %}">View</a>
                 </li>
-                <li>
+                {% if request.user.role == 'Manager' or request.user.role == 'Admin' or request.user.role == 'Accountant' %}<li>
                   <a class="btn btn-sm btn-outline-secondary" href="{% url 'farm:farmemployeestats_update' stat.pk %}">Update</a>
                 </li>
                 <li>
                   <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#removeModal{{ stat.pk }}">Delete</button>
-                </li>
+                </li>{% endif %}
               </ul>
             </div>
           </div>

@@ -10,7 +10,7 @@
           <a class="btn btn-outline-secondary btn-sm" href="{% url 'farm:statement_list' %}?farm={{statement.farm.pk}}"> Back</a>
         </div>
         <div class="d-flex gap-2">
-          <a class="btn btn-outline-secondary btn-md" href="{% url 'farm:statement_update' statement.pk %}">Edit</a>
+          {% if request.user.role == 'Accountant' or request.user.role == 'Admin' %}<a class="btn btn-outline-secondary btn-md" href="{% url 'farm:statement_update' statement.pk %}">Edit</a>{% endif %}
         <a class="btn btn-primary btn-md" href="#" onclick="(function(){var content=document.querySelector('.invoice-wrap'); if(!content) return false; var w=window.open('','_blank','width=900,height=650'); w.document.write('<!doctype html><html><head><meta charset=&quot;utf-8&quot;><title>Print</title>'); var links=document.querySelectorAll('link[rel=&quot;stylesheet&quot;], style'); for(var i=0;i<links.length;i++){w.document.write(links[i].outerHTML);} w.document.write('</head><body>'); w.document.write(content.outerHTML); w.document.write('</body></html>'); w.document.close(); w.focus(); setTimeout(function(){ w.print(); w.close(); }, 500); })(); return false;">Print</a>
         </div>
       </div>

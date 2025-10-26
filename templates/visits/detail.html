@@ -9,8 +9,8 @@
         <a class="btn btn-outline-secondary btn-md" href="{% url 'farm:sitevisit_list'  %}?farm={{sitevisit.farm.pk}}"> Back to Visits</a>
       </div>
       <div class="d-flex gap-2">
-        <a class="btn btn-outline-secondary" href="{% url 'farm:sitevisit_update' sitevisit.pk %}">Edit</a>
-        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteVisitModal">Delete</button>
+       {% if request.user.role == 'Designated Agent' %} <a class="btn btn-outline-secondary" href="{% url 'farm:sitevisit_update' sitevisit.pk %}">Edit</a>
+        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteVisitModal">Delete</button>{% endif %}
         <a class="btn btn-primary" href="#" onclick="window.print();return false;">Print</a>
       </div>
     </div>
