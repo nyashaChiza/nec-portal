@@ -1,8 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.views import generic
 from django.conf import settings
-
+from django.views import View
 from farm.models import Farm, SiteVisit, Notice, Statement, FarmEmployeeStats
 from farm.forms import FarmForm, StatementForm, SiteVisitForm, FarmEmployeeStatsForm, NoticeForm
 from django.core.exceptions import FieldError
@@ -136,8 +136,25 @@ class NoticeDeleteView(generic.DeleteView):
     def get(self, request, *args, **kwargs):
         # perform delete immediately on GET (bypass confirm page)
         return self.post(request, *args, **kwargs)
+    
+class NoticeDeleteView(generic.DeleteView):
+    model = Notice
+    success_url = reverse_lazy("farm:notice_list")
 
+    def get(self, request, *args, **kwargs):
+        # perform delete immediately on GET (bypass confirm page)
+        return self.post(request, *args, **kwargs)
 
+class NoticeStatusView(View):
+    success_url = reverse_lazy("farm:notice_list")
+
+    def get(self, request, *args, **kwargs):
+        notice_id = kwargs.get("pk")
+        notice = get_object_or_404(Notice, pk=notice_id)
+        notice.is_active = not notice.is_active
+        notice.save(update_fields=["is_active"])
+        return redirect(self.success_url)
+    
 # Statement views
 class StatementListView(generic.ListView):
     model = Statement

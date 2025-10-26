@@ -57,6 +57,9 @@
                   <a class="btn btn-sm btn-outline-secondary" href="{% url 'farm:notice_update' notice.pk %}">Edit</a>
                 </li>
                 <li>
+                  <a class="btn btn-sm btn-outline-{% if notice.is_active %}danger{% else %}success{% endif %}" href="{% url 'farm:notice_toggle_status' notice.pk %}">{% if notice.is_active %}Disable{% else %}Enable{% endif %}</a>
+                </li>
+                <li>
                   <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#removeModal{{ notice.pk }}">Delete</button>
                 </li>
               </ul>

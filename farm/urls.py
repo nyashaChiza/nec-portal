@@ -23,6 +23,7 @@ urlpatterns = [
     path('notices/<int:pk>/', views.NoticeDetailView.as_view(), name='notice_detail'),
     path('notices/<int:pk>/update/', views.NoticeUpdateView.as_view(), name='notice_update'),
     path('notices/<int:pk>/delete/', views.NoticeDeleteView.as_view(), name='notice_delete'),
+    path('notices/<int:pk>/toggle-status/', views.NoticeStatusView.as_view(), name='notice_toggle_status'),
 
     # Statement
     path('statements/', views.StatementListView.as_view(), name='statement_list'),
